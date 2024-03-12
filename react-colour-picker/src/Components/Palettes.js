@@ -2,7 +2,7 @@ import React from 'react'
 import { useState } from 'react'
 import { palette } from './myPalettes'
 import styled from 'styled-components'
-
+import { Link } from 'react-router-dom'
 export default function Palettes() {
 
     const [myPalettes, setMyPalettes] = useState(palette)
@@ -31,6 +31,8 @@ export default function Palettes() {
 }
 
 const PalettesStyled = styled.div`
+position: relative;
+z-zIndex: 5; 
     .palettes{
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));

@@ -2,14 +2,20 @@ import styled from "styled-components"
 import bg from './bg.png'
 import bg2 from './grid.png'
 import Palettes from "./Components/Palettes"
+import { BrowserRouter, Routes, Route } from 'react-router-dom' 
+
 
 function App() {
   return (
+    <BrowserRouter>
     <AppStyled bg={bg} grid={bg2}>
      <div className="grid"></div>
-     <Palettes />
-
+     <Routes>
+      <Route path="/" element={<Palettes/>}/>
+      <Route path="/palette/:id" element={''}/>
+     </Routes>
     </AppStyled>
+    </BrowserRouter>
   );
 }
 
