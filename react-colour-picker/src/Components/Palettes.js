@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState } from 'react'
-import { palette } from './myPalettes'
+import { palette } from '../myPalettes'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 export default function Palettes() {
@@ -13,8 +13,8 @@ export default function Palettes() {
         <div className='palettes'>
         {
             myPalettes.map((pal, index)=>{
-                console.log(pal)
-                return <div className='palette'>
+               return <Link to={`/palette/${pal.name}`} key={pal.name}>
+                 <div className='palette'>
                     {pal.colors.map((col, i)=>{
                         return <div key={i} className='color'
                         style={{backgroundColor: col}}
@@ -23,6 +23,8 @@ export default function Palettes() {
                         </div>
                     })}
                 </div>
+                <p>{pal.name}</p>
+                </Link>
             })
         }            
         </div>       
@@ -39,6 +41,22 @@ z-zIndex: 5;
         grid-gap: 25px;
         padding: 2rem 18rem;
         transition: all .3s ease;
+        a{
+            text-decoration: none;
+            display: inline-block;
+            padding: 1rem;
+            background-color: white;
+            border-radius: 7px;
+            box-shadow: 1px 3px 20px rgba(0,0,0, 0.2);
+        }
+        p{
+            font-size: 1.5rem;   
+            padding-top: .5rem;
+            display: inline-block;
+            background: linear-gradient(90deg, #7263F3 20%,#F56692 50%, #6FCF97 60%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
         .palette{
             display: grid;
             grid-template-columns: repeat(5, 1fr);
