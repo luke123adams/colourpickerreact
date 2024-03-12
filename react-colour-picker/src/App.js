@@ -1,5 +1,4 @@
 import styled from "styled-components"
-import './App.css';
 import bg from './bg.png'
 import bg2 from './grid.png'
 import Palettes from "./Components/Palettes"
