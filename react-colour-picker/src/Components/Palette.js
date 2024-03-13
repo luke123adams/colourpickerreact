@@ -1,8 +1,9 @@
-import React from "react";
+import {useState } from "react";
 import { useParams } from "react-router";
 import styled from "styled-components";
 import { palette } from '../myPalettes'
 import { Link } from "react-router-dom";
+import { SketchPicker } from 'react-color'
 
 const del = <i className="fa-sharp fa-solid fa-trash"></i>
 const brush = <i className="fa-solid fa-brush"></i>
@@ -14,11 +15,25 @@ export default function Palette() {
 
     // state
 
-    const [myPalette, setMyPalette] = React.useState(initialPalette)
-    const [toRgb, setToRgb] = React.useState('hex')
+    const [myPalette, setMyPalette] = useState(initialPalette)
+    const [toRgb, setToRgb] = useState('hex')
+    const [toggleColorPicker, setToggleColorPicker] = useState(false)
+    const [colorPickerColor, setColorPickerColor] = useState('#fff')
+    const [currentColor, setCurrentColor] = useState('')
 
     const toggleToRgb = (e) => {
         setToRgb(e.target.value)
+    }
+
+    const convertToRgb = (hex) => {
+        hex = hex.replace('#', '')
+        const r = parseInt(hex.substring(0, 2), 16)
+        const g = parseInt(hex.substring(2, 4), 16)
+        const b = parseInt(hex.substring(4, 6), 16)
+
+        return `RGB (${r}, ${g}, ${b})`
+
+
     }
 
     const deleteColor = (index) => {
@@ -33,6 +48,7 @@ export default function Palette() {
     }
 
     const clear = (index) => {
+        setMyPalette({...myPalette, colors: []})
 
     }
 
@@ -41,7 +57,16 @@ export default function Palette() {
     }
 
     const handleColorChange = (color) => {
+        setColorPickerColor(color.hex)
 
+    }
+
+    const handleFullColorClick = (event) => {
+        setCurrentColor(event)
+        console.log(currentColor)
+        setTimeout(()=>{
+            setCurrentColor('')
+        }, 1300)
     }
 
   return (
@@ -57,17 +82,31 @@ export default function Palette() {
             </select>
         </div>
         <div className="right">
-            <button className="btn-icon">
+            <button className="btn-icon" onClick={()=>{setToggleColorPicker(!toggleColorPicker)}}>
                 {paletteIcon}
             </button>
-            <button className="btn-icon">{brush}</button>
+            <button className="btn-icon" onClick={clear}>{brush}</button>
         </div>
     </div>
+    {toggleColorPicker && 
+    <div className="color-picker-container">
+        <div className="color-picker">
+            <SketchPicker
+            color={colorPickerColor}
+            onChange={handleColorChange}
+            width="400px"/>
+        </div>
+    </div>}
     <div className="colors">
         {myPalette.colors.map((color, index) => {
            return <div key={index}
-            style={{background: color}} className="full-color">
+            style={{background: color}}
+            className="full-color"
+            onClick={(e)=>{
+                handleFullColorClick(e.target.style.backgroundColor)
+            }}>
                 <h4>
+                {toRgb === 'hex' ? color : convertToRgb(color)}
 
                 </h4>
                 <button className="btn-icon" onClick={()=>{
@@ -77,6 +116,12 @@ export default function Palette() {
             </div>
         })}
     </div>
+    {currentColor && <div className="current-color" style={{backgroundColor: currentColor}}>
+        <div className="text">
+            <h3>Random</h3>
+        </div>
+    </div>
+    }
     </PaletteStyled>
   )
 }
@@ -144,6 +189,33 @@ const PaletteStyled = styled.div`
         }
     }
 
+    .current-color{
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transform: scale(0);
+        transition: all 0.3s ease-in-out;
+        animation: show 0.3s ease-in-out forwards;
+
+        @keyframes show {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+    }
+    
+
     .colors{
         display: grid;
         grid-template-columns: repeat(5, 1fr);
@@ -152,10 +224,59 @@ const PaletteStyled = styled.div`
         .full-color{
             cursor: pointer;
             display: flex;
-            z-zIndex: 5;
+            z-index: 5;
             align-items: center;
             justify-content: center;
             position: relative;
+            h4{
+                font-size: 1.2rem;
+                color: #fff;
+                text-transform: uppercase;
+                font-weight: 700;
+                text-shadow: 3px 3px 1px rgba(0,0,0, 0.2);
+                pointer-events: none; 
+            }
+            button{
+                position: absolute;
+                right: 0;
+                bottom: 0px;
+                border-bottom-left-radius: 0;
+                border-top-right-radius: 0;
+                border-bottom-right-radius: 0;
+                padding: .3rem .4rem;
+                font-size: 1.1rem;
+                color: #fff;
+                background: transparent;
+                filter: drop-shadow(0 3px 0.3rem rgba(0,0,0,0.4));
+            }
+        }
+    }
+
+    .color-picker-container{
+        .sketch-picker{
+            box-shadow: 3px 3px 15px rgba(0,0,0, 0.5) !important;
+        }
+        .color-picker{
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 11;
+            button{
+                display: flex;
+                align-items: center;
+                gap: .5rem;
+                box-shadow: 2px 2px 15px rgba(0,0,0,0.5);
+            }
+        }
+        .color-picker-overlay{
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0, 0.8);
+            z-index: 11;
         }
     }
 `;
