@@ -2,7 +2,11 @@ import React from "react";
 import { useParams } from "react-router";
 import styled from "styled-components";
 import { palette } from '../myPalettes'
+import { Link } from "react-router-dom";
 
+const del = <i className="fa-sharp fa-solid fa-trash"></i>
+const brush = <i className="fa-solid fa-brush"></i>
+const paletteIcon = <i className="fa-solid fa-palette"></i>
 
 export default function Palette() {
     const {id} = useParams()
@@ -13,8 +17,26 @@ export default function Palette() {
     const [myPalette, setMyPalette] = React.useState(initialPalette)
 
     console.log(myPalette)
+
   return (
     <PaletteStyled>
+    <div className="header-items">
+        <div className="link-con">
+            <Link to={'/'}>&larr;&nbsp; Back</Link>
+        </div>
+        <div className="select-type">
+            <select >
+                <option value="hex">HEX</option>
+                <option value="rgb">RGB</option>
+            </select>
+        </div>
+        <div className="right">
+            <button className="btn-icon">
+                {paletteIcon}
+            </button>
+            <button className="btn-icon">{brush}</button>
+        </div>
+    </div>
     <div className="colors">
         {myPalette.colors.map((color, index) => {
            return <div key={index}
@@ -38,6 +60,7 @@ const PaletteStyled = styled.div`
         .full-color{
             cursor: pointer;
             display: flex;
+            z-zIndex: 5;
             align-items: center;
             justify-content: center;
             position: relative;
