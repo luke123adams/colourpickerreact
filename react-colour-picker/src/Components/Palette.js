@@ -64,9 +64,11 @@ export default function Palette() {
     const handleFullColorClick = (event) => {
         setCurrentColor(event)
         console.log(currentColor)
-        setTimeout(()=>{
-            setCurrentColor('')
-        }, 1300)
+        
+    }
+
+    const cancelFullColor = () => {
+        setCurrentColor('')
     }
 
   return (
@@ -119,6 +121,8 @@ export default function Palette() {
     {currentColor && <div className="current-color" style={{backgroundColor: currentColor}}>
         <div className="text">
             <h3>Random</h3>
+            <button className="btn-icon" onClick={()=>{cancelFullColor()}}>X</button>
+
         </div>
     </div>
     }
@@ -201,6 +205,15 @@ const PaletteStyled = styled.div`
         transform: scale(0);
         transition: all 0.3s ease-in-out;
         animation: show 0.3s ease-in-out forwards;
+        .text{
+            background: rgba(255, 255, 255, 0.26);
+            padding: 2rem 6rem;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 5px 0 rgba(0,0,0,0.09);
+        }
 
         @keyframes show {
             0% {
@@ -224,7 +237,6 @@ const PaletteStyled = styled.div`
         .full-color{
             cursor: pointer;
             display: flex;
-            z-index: 5;
             align-items: center;
             justify-content: center;
             position: relative;
