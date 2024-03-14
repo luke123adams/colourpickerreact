@@ -53,6 +53,16 @@ export default function Palette() {
     }
 
     const createColor = () => {
+        if(!colorPickerColor) return
+
+        const newColors = [...myPalette.colors]
+        if(newColors.length < 20) {
+            newColors.push(colorPickerColor)
+            setMyPalette({...myPalette, colors: newColors})
+        }
+        else{
+            alert('Max 20 colours per palette')
+        }
 
     }
 
@@ -71,11 +81,10 @@ export default function Palette() {
         setCurrentColor('')
     }
 
-    const randomMsgs = ["What a lovely hue", "You should paint all your walls with this", "I call this colour 'steel sunset'"]
+    const randomMsgs = ["What a lovely hue", "You should paint all your walls with this", "I call this colour 'steel sunset'", "you won't find this in the dulux catalogue"]
 
     const returnRandomMsg = (x) => {
-        const index = Math.floor(Math.random() * x.length)
-        return x[index]
+        return x[Math.floor(Math.random() * x.length)]
     }
 
   return (
@@ -104,6 +113,11 @@ export default function Palette() {
             color={colorPickerColor}
             onChange={handleColorChange}
             width="400px"/>
+            <button className='btn-icon' onClick={()=>{
+                createColor()
+            }}>
+                <i className="fa-solid fa-plus"></i> Add
+            </button>
         </div>
     </div>}
     <div className="colors">
