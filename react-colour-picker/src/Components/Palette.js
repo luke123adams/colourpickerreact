@@ -71,6 +71,13 @@ export default function Palette() {
         setCurrentColor('')
     }
 
+    const randomMsgs = ["What a lovely hue", "You should paint all your walls with this", "I call this colour 'steel sunset'"]
+
+    const returnRandomMsg = (x) => {
+        const index = Math.floor(Math.random() * x.length)
+        return x[index]
+    }
+
   return (
     <PaletteStyled>
     <div className="header-items">
@@ -120,10 +127,12 @@ export default function Palette() {
     </div>
     {currentColor && <div className="current-color" style={{backgroundColor: currentColor}}>
         <div className="text">
-            <h3>Random</h3>
-            <button className="btn-icon" onClick={()=>{cancelFullColor()}}>X</button>
+            <h3>{returnRandomMsg(randomMsgs)}</h3>
 
+            <button className="btn-icon" onClick={()=>{cancelFullColor()}}>X</button>
         </div>
+        <h4> {toRgb === 'hex' ? currentColor : convertToRgb(currentColor)}
+</h4>
     </div>
     }
     </PaletteStyled>
@@ -213,6 +222,14 @@ const PaletteStyled = styled.div`
             justify-content: center;
             align-items: center;
             box-shadow: 0 2px 5px 0 rgba(0,0,0,0.09);
+            h3{
+                text-align: center;
+                font-size: 5rem;
+                color: white;
+                font-weight: 700;
+                text-transform: uppercase;
+                text-shadow: 3px 5px 7px rgba(0,0,0, 0.1);
+            }
         }
 
         @keyframes show {
