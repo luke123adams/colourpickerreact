@@ -8,6 +8,10 @@ import { SketchPicker } from 'react-color'
 const del = <i className="fa-sharp fa-solid fa-trash"></i>
 const brush = <i className="fa-solid fa-brush"></i>
 const paletteIcon = <i className="fa-solid fa-palette"></i>
+const clipBoardIcon = <i className="fa-solid fa-copy"></i>
+const copiedIcon = <i className="fa-solid fa-clipboard-check"></i>
+
+
 
 export default function Palette() {
     const {id} = useParams()
@@ -20,6 +24,7 @@ export default function Palette() {
     const [toggleColorPicker, setToggleColorPicker] = useState(false)
     const [colorPickerColor, setColorPickerColor] = useState('#fff')
     const [currentColor, setCurrentColor] = useState('')
+    const [copied, setCopied] = useState(false)
 
     const toggleToRgb = (e) => {
         setToRgb(e.target.value)
@@ -32,7 +37,6 @@ export default function Palette() {
         const b = parseInt(hex.substring(4, 6), 16)
 
         return `RGB (${r}, ${g}, ${b})`
-
 
     }
 
@@ -72,20 +76,39 @@ export default function Palette() {
     }
 
     const handleFullColorClick = (event) => {
+        if(toRgb === 'hex') {
+        }
+        console.log(event)
         setCurrentColor(event)
-        console.log(currentColor)
         
+        
+    }
+
+    const handleClipBoardCopy = (event) => {
+        console.log(toRgb)
+        const text = event
+        console.log(text)
+        if (toRgb === 'hex') {
+            navigator.clipboard.writeText(text)
+        setCopied(true)
+        } else {
+        navigator.clipboard.writeText(convertToRgb(text))
+        setCopied(true)
+        }
     }
 
     const cancelFullColor = () => {
         setCurrentColor('')
+        setCopied(false)
     }
+
 
     const randomMsgs = ["What a lovely hue", "You should paint all your walls with this", "I call this colour 'steel sunset'", "you won't find this in the dulux catalogue"]
 
     const returnRandomMsg = (x) => {
         return x[Math.floor(Math.random() * x.length)]
     }
+    
 
   return (
     <PaletteStyled>
@@ -126,6 +149,10 @@ export default function Palette() {
             style={{background: color}}
             className="full-color"
             onClick={(e)=>{
+                if (toRgb === 'hex') {
+                    handleFullColorClick(color)
+                }
+                else
                 handleFullColorClick(e.target.style.backgroundColor)
             }}>
                 <h4>
@@ -142,11 +169,15 @@ export default function Palette() {
     {currentColor && <div className="current-color" style={{backgroundColor: currentColor}}>
         <div className="text">
             <h3>{returnRandomMsg(randomMsgs)}</h3>
-
+            <button onClick={()=>{console.log(currentColor)}}>d</button>
+            <div>
             <button className="btn-icon" onClick={()=>{cancelFullColor()}}>X</button>
+            <button className="btn-icon" onClick={()=>{handleClipBoardCopy(currentColor)}}>{copied ? copiedIcon : clipBoardIcon}</button>
+
+            </div>
+
         </div>
-        <h4> {toRgb === 'hex' ? currentColor : convertToRgb(currentColor)}
-</h4>
+        
     </div>
     }
     </PaletteStyled>
